@@ -136,5 +136,46 @@ void addPatient(Patient p){
     cout<<"Patient "<<p.name<<" added with ID "<<p.id<<endl;
 }
 
+// counting the number of nodes in linkedlist
+int countNodes(Node* head){
+    int count = 0;
+    Node* temp = head;
 
+    while (temp != nullptr){
+        count++;
+        temp = temp->next;
+    }
+    return count;
+}
+
+//Making of array for bubble sort and binary search
+struct Array{
+    int length;
+    int size;
+    int* items;
+}
+
+Array(int arrsize){
+    size = arrsize;
+    length = 0;
+    items = new int[arrsize];
+}
+
+void linkedList (Node* head, size, array){
+    
+    Node* temp = head;
+
+    for (int i = 0; i <= size; i++){
+        while (temp != nullptr){
+            i = temp->data
+            item[i];
+            temp = temp->next;
+        
+    return arr;
+}
+
+    
+
+
+hi
 };
