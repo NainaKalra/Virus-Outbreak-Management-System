@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/nainakalra/Desktop/DSA Mini Project",
+      "program": "/Users/nainakalra/Desktop/DSA Mini Project/build/Debug/outDebug"
+    }
+  ]
+}
