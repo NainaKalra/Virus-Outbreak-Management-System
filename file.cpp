@@ -257,7 +257,7 @@ int countNodes(Node* head){
 }
 };
 
-// contact tracing : using stack for contact details of patients - uses LIFO 
+// CONTACT TRACING : using stack for contact details of patients - uses LIFO 
 // am using &p for reference so that we can update the original patient data in linked list when we add or remove contacts
 void pushContact(Patient &p, string contactName)
 {
@@ -325,13 +325,10 @@ void linkedList (Node* head, size, array){
     return arr;
 }
 
-    
+ 
+//TESTING QUEUE - to manage patients waiting for testing and update their status after testing
 
-
-
-//process testing queue and update patient status by dequeueing patients and marking them as tested with results
-// used & for reference so that we can update the original data in linked list after testing
-void processTestingQueue(TestingQueue &tq, LinkedList &list)
+void processTestingQueue(TestingQueue & tq, LinkedList & list) // used & for reference so that we can update the original data in linked list after testing
 {
     if (tq.isEmpty())
     {
@@ -376,6 +373,51 @@ void processTestingQueue(TestingQueue &tq, LinkedList &list)
 
 }
 
+//PATIENT SUMMARY - to show summary of all patients in linked list - active, recovered, deceased, critical and untested patients
 
+void patientSummary(LinkedList &list)
+{
+    if (list.size == 0)
+    {
+        cout << "No patients registered." << endl;
+        return;
+    }
 
-//main funtion and menu will be here - 
+    int active = 0, 
+    int recovered = 0, 
+    int deceased = 0;
+    int critical = 0, 
+    int untested = 0;
+
+    // traversing the linked list to count the number of patients in each category
+    Node *temp = list.head;
+    while (temp != nullptr)
+    {
+        if (temp->data.status == "Active")
+            active++;
+        else if (temp->data.status == "Recovered")
+            recovered++;
+        else if (temp->data.status == "Deceased")
+            deceased++;
+        //if severity is 4 then patient is critical
+        if (temp->data.severity == 4)
+            critical++;
+        //for those who r not tested
+        if (!temp->data.tested)
+            untested++;
+
+        temp = temp->next;
+    }
+
+    cout << "\n------PATIENT SUMMARY-------" << endl;
+    cout << "Total Patients : " << list.size << endl;
+    cout << "Active         : " << active << endl;
+    cout << "Recovered      : " << recovered << endl;
+    cout << "Deceased       : " << deceased << endl;
+    cout << "Critical       : " << critical << endl;
+    cout << "Untested       : " << untested << endl;
+    cout << "-----------------------------------" << endl;
+}
+
+//MAIN FUNCTION AND MENU -
+
