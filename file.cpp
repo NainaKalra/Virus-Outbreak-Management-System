@@ -136,7 +136,9 @@ void addPatient(Patient p){
     cout<<"Patient "<<p.name<<" added with ID "<<p.id<<endl;
 }
 
-//finding patient by id in linked list
+//finding patient by id in linked list 
+//it will help in testing queue to update patient status after testing
+// and also for contact tracing to add or remove contacts for specific patient
 Node* findPatient(int id)
 {
     Node *temp= head;
@@ -242,7 +244,7 @@ int copyToArray(Patient arr[])
     return i; // number of patients copied to array
 }
 
-// counting the number of nodes in linkedlist
+// counting the number of nodes in linkedlist- just in case as helper function 
 int countNodes(Node* head){
     int count = 0;
     Node* temp = head;
@@ -256,9 +258,10 @@ int countNodes(Node* head){
 };
 
 // contact tracing : using stack for contact details of patients - uses LIFO 
-
+// am using &p for reference so that we can update the original patient data in linked list when we add or remove contacts
 void pushContact(Patient &p, string contactName)
 {
+//array size is 10, used 9 as index for 10th element, so if stackTop is 9 then stack is full
     if (p.stackTop == 9)
     {
         cout << "Contact stack is full." << endl;
@@ -271,6 +274,7 @@ void pushContact(Patient &p, string contactName)
 
 void popContact(Patient &p)
 {
+//if stack is empty then stackTop will be -1
     if(p.stackTop==-1)
     {
         cout<<"No contacts to remove."<<endl;
@@ -288,6 +292,7 @@ void displayContacts(Patient &p)
         return;
     }
     cout << "Contact Trace (Latest First):" << endl;
+    //displaying contacts from top of stack to bottom 
     for (int i = p.stackTop; i >= 0; i--)
     {
         cout << "  - " << p.contactStack[i] << endl;
@@ -325,7 +330,7 @@ void linkedList (Node* head, size, array){
 
 
 //process testing queue and update patient status by dequeueing patients and marking them as tested with results
-
+// used & for reference so that we can update the original data in linked list after testing
 void processTestingQueue(TestingQueue &tq, LinkedList &list)
 {
     if (tq.isEmpty())
@@ -334,8 +339,8 @@ void processTestingQueue(TestingQueue &tq, LinkedList &list)
         return;
     }
 
-    int id = tq.dequeue();
-    Node *node = list.findPatient(id);
+    int id = tq.dequeue(); //fifo - getting the patient id at front of queue for testing
+    Node *node = list.findPatient(id); //finding the patient in linked list using id to update their status after testing
 
     if (node == nullptr)
     {
@@ -349,9 +354,17 @@ void processTestingQueue(TestingQueue &tq, LinkedList &list)
     int res;
     cout << "Enter result (1=Positive, 0=Negative): ";
     cin >> res;
-    node->data.isPositive = (res == 1);
-
-    if (node->data.isPositive)
+//if res is 1 then patient is positive and if res is 0 then patient is negative
+    if (res == 1)
+    {
+        node->data.isPositive = true;
+    }
+    else
+    {
+        node->data.isPositive = false;
+    }
+//displaying result
+    if (node->data.isPositive = true)
     {
         cout << "Result: POSITIVE - Isolation required!" << endl;
     }
@@ -362,5 +375,7 @@ void processTestingQueue(TestingQueue &tq, LinkedList &list)
     }
 
 }
+
+
 
 //main funtion and menu will be here - 
