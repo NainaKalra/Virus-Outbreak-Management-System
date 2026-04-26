@@ -15,11 +15,10 @@ struct Patient{
     
 
     //making a stack for contact tracing
-
     string contactStack[10];
     int stackTop;
 
-    //constructor 
+    //constructor - to set default values for patient
     Patient(){
         id = 0;
         age = 0;
@@ -27,7 +26,7 @@ struct Patient{
         status = "Active";
         tested = false;
         isPositive = false;
-        stackTop = -1; // stack is empty in start
+        stackTop = -1; // as stack is empty in start
     }
 };
 
@@ -39,12 +38,11 @@ struct Node{
 
     Node(Patient p){
         data = p;
-        next = nullptr;
+        next = nullptr; //as in start there is no next node
     }
 };
 
 //testing center queue 
-
 struct TestingQueue{
     //storing patient ids in the queue
     int patientIds[50]; 
@@ -52,10 +50,11 @@ struct TestingQueue{
     int rear;           
     int count; //patient count in the queue
 
+//constructor to initialize the queue
     TestingQueue()
     {
         front = 0;
-        rear = -1;
+        rear = -1; //as rear starts before the first element
         count = 0;
     }
 
@@ -65,11 +64,11 @@ void enqueue(int patientId){
         cout << "Testing queue is full. Please wait." << endl;
         return;
     }
-    rear++; //pointer forward 
+    rear++; //create space for new patient by moving rear forward
     //storing patient id in queue
     patientIds[rear] = patientId;
     count++; 
-    cout<<"Patient ID"<<patientId<<"added to the testing queue."<<endl;
+    cout<<"Patient ID: "<<patientId<<" is added to the testing queue."<<endl;
 }
 //dequeue - to remoeve patients after testing from the quueue
 int dequeue(){
@@ -80,11 +79,11 @@ int dequeue(){
     int id = patientIds[front];
      //getting the front patient id
     front++; 
-    //moving front pointer forward
+    //moving front pointer forward so that next patient becomes the front
     count--;
      //decreasing count
     return id; 
-    //return the dequeued patient id
+    //return the dequeued patient id so that we can update their status in linked list after testing
 }
 //to check if quqeue is empty - 
 bool isEmpty(){
@@ -97,8 +96,9 @@ void display(){
         return;
     }
     cout<<"Testing Queue: ";
+    //using for loop going from front to rear
     for(int i=front; i<=rear; i++){
-        cout<<"ID - "<<patientIds[i];
+        cout<<"ID: "<<patientIds[i];
         if(i!=rear){
             cout<<" -> ";
         }
@@ -111,10 +111,10 @@ void display(){
 //Linked list - to manage and add or remove patients 
 struct LinkedList{
     Node *head;
-    int size;
+    int size; //counter for nummber
 
     LinkedList(){
-        head= nullptr;
+        head= nullptr; //as in start there is no patient
         size = 0;
     }
 
@@ -143,7 +143,7 @@ Node* findPatient(int id)
     while (temp != nullptr)
     {
         if (temp->data.id == id)
-            return temp;
+            return temp; //returning temp and not data so we have the original thing to update after testing
         temp= temp->next;
     }
     return nullptr;
@@ -157,7 +157,7 @@ void removePatient(int id)
         cout << "No patients found." << endl;
         return;
     }
-
+//case 1 - when patient is at head of linked list
     if (head->data.id == id)
     {
         Node *Delete = head;
@@ -167,7 +167,7 @@ void removePatient(int id)
         cout << "Patient removed." << endl;
         return;
     }
-
+//case 2 - when patient is in middle or end of linked list
     Node *temp = head;
     while (temp->next != nullptr)
     {
@@ -196,11 +196,11 @@ void display()
 
     cout << "\n-----All Patients------" << endl;
     Node *temp = head;
-    int num = 1;
+    int num = 1; //just for numbering the patients in display
 
     while (temp != nullptr)
     {
-        string sev= "";
+        string sev= ""; //making temporary string to display severity in words instead of numbers
         if (temp->data.severity == 1)
             sev = "Mild";
         else if (temp->data.severity == 2)
@@ -218,17 +218,29 @@ void display()
              << " Status: " << temp->data.status
              << " Tested: " << (temp->data.tested ? "Yes" : "No");
 
+//if patient is tested then only we will show the result
         if (temp->data.tested)
             cout << " Result: " << (temp->data.isPositive ? "Positive" : "Negative");
 
         cout << endl;
-        temp = temp->next;
+        temp = temp->next; //sending temp to next patient 
         num++;
     }
     cout << "Total: " << size << " patients" << endl;
 }
-
-
+//to copy patient data from linked list to array for sorting and searching
+int copyToArray(Patient arr[])
+{
+    Node *temp = head;
+    int i = 0;
+    while (temp != nullptr)
+    {
+        arr[i] = temp->data; //puts the patient data in array and then moves to next patient in linked list
+        i++;
+        temp = temp->next;
+    }
+    return i; // number of patients copied to array
+}
 
 // counting the number of nodes in linkedlist
 int countNodes(Node* head){
@@ -348,68 +360,7 @@ void processTestingQueue(TestingQueue &tq, LinkedList &list)
         cout << "Result: Negative - Patient cleared." << endl;
         node->data.status = "Recovered";
     }
-}
 
-//daily based stats or daily report
-
-void dailyReport(LinkedList & list, TestingQueue & tq)
-{
-    if (list.size == 0)
-    {
-        cout << "No data available." << endl;
-        return;
-    }
-
-    int active = 0, recovered = 0, deceased = 0;
-    int mild = 0, moderate = 0, severe = 0, critical = 0;
-    int tested = 0, positive = 0;
-
-    Node *temp = list.head;
-    while (temp != nullptr)
-    {
-        if (temp->data.status == "Active")
-            active++;
-        else if (temp->data.status == "Recovered")
-            recovered++;
-        else if (temp->data.status == "Deceased")
-            deceased++;
-
-        if (temp->data.severity == 1)
-            mild++;
-        else if (temp->data.severity == 2)
-            moderate++;
-        else if (temp->data.severity == 3)
-            severe++;
-        else
-            critical++;
-
-        if (temp->data.tested)
-            tested++;
-        if (temp->data.isPositive)
-            positive++;
-
-        temp = temp->next;
-    }
-
-    cout << "\n------- DAILY OUTBREAK REPORT --------" << endl;
-    cout << "Total Patients : " << list.size << endl;
-    cout << "Active         : " << active << endl;
-    cout << "Recovered      : " << recovered << endl;
-    cout << "Deceased       : " << deceased << endl;
-    cout << "-----------------------------------" << endl;
-    cout << "Mild           : " << mild << endl;
-    cout << "Moderate       : " << moderate << endl;
-    cout << "Severe         : " << severe << endl;
-    cout << "Critical       : " << critical << endl;
-    cout << "-----------------------------------" << endl;
-    cout << "Tested         : " << tested << endl;
-    cout << "Positive       : " << positive << endl;
-    cout << "In Test Queue  : " << tq.count << endl;
-
-    if (critical > 0)
-        cout << "\nALERT: " << critical << " critical patient(s) need immediate attention!" << endl;
-
-    cout << "===================================" << endl;
 }
 
 //main funtion and menu will be here - 
