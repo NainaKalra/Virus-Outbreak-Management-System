@@ -228,6 +228,8 @@ void display()
     cout << "Total: " << size << " patients" << endl;
 }
 
+
+
 // counting the number of nodes in linkedlist
 int countNodes(Node* head){
     int count = 0;
@@ -238,6 +240,46 @@ int countNodes(Node* head){
         temp = temp->next;
     }
     return count;
+}
+};
+
+// contact tracing : using stack to add contact details of patients
+
+void pushContact(Patient &p, string contactName)
+{
+    if (p.stackTop == 9)
+    {
+        cout << "Contact stack is full." << endl;
+        return;
+    }
+    p.stackTop++;
+    p.contactStack[p.stackTop] = contactName;
+    cout << "Contact added: " << contactName << endl;
+}
+
+void popContact(Patient &p)
+{
+    if (p.stackTop == -1)
+    {
+        cout << "No contacts to remove." << endl;
+        return;
+    }
+    cout << "Removed contact: " << p.contactStack[p.stackTop] << endl;
+    p.stackTop--;
+}
+
+void displayContacts(Patient &p)
+{
+    if (p.stackTop == -1)
+    {
+        cout << "No contacts traced." << endl;
+        return;
+    }
+    cout << "Contact Trace (Latest First):" << endl;
+    for (int i = p.stackTop; i >= 0; i--)
+    {
+        cout << "  - " << p.contactStack[i] << endl;
+    }
 }
 
 //Making of array for bubble sort and binary search
