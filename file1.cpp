@@ -435,7 +435,7 @@ int main()
 
     do
     {
-        cout << "\n------ VIRUS OUTBREAK MANAGEMENT SYSTEM-----" << endl;
+        cout << "\n====== COVID PATIENT MANAGEMENT SYSTEM ======" << endl;
         cout << "1.  Add Patient" << endl;
         cout << "2.  Remove Patient" << endl;
         cout << "3.  Display All Patients" << endl;
@@ -568,6 +568,7 @@ int main()
 
         else if (choice == 10)
         {
+            // FIX: array refreshed here, not at program start
             Patient arr[50];
             int n = patientList.copyToArray(arr);
 
@@ -600,6 +601,7 @@ int main()
 
         else if (choice == 11)
         {
+            // FIX: array refreshed here, not at program start
             Patient arr[50];
             int n = patientList.copyToArray(arr);
 
