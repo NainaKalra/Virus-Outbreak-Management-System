@@ -244,6 +244,41 @@ int copyToArray(Patient arr[])
     return i; // number of patients copied to array
 }
 
+void BubbleSort (int arr[], int size){
+    
+}
+
+
+void sortBySeverityDescending(Patient arr[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            // swap if next patient has higher severity
+            if (arr[j].severity < arr[j + 1].severity)
+            {
+                Patient temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+
+int searchById(Patient arr[], int n, int searchId)
+{
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i].id == searchId)
+        {
+            return i;  // patient found at index i
+        }
+    }
+    return -1; // patient not found
+}
+
 // counting the number of nodes in linkedlist- just in case as helper function 
 int countNodes(Node* head){
     int count = 0;
@@ -299,46 +334,7 @@ void displayContacts(Patient &p)
     }
 }
 
-//Making of array for bubble sort and binary search
-struct Array{
-    int length;
-    int size;
-    int* items;
-}
-
-Array(int arrsize){
-    size = arrsize;
-    length = 0;
-    items = new int[arrsize];
-}
-
-void linkedList (Node* head, size, array){
-    
-    Node* temp = head;
-
-    for (int i = 0; i <= size; i++){
-        while (temp != nullptr){
-            i = temp->data
-            item[i];
-            temp = temp->next;
-        
-    return arr;
-}
-
-
-
-//bubble sort
-
-//binary search
-
-// showSortedPatients() - to display patients sorted by age or severity using bubble sort and binary search
-
-//searchPatient() - to search for a patient by name or id using binary search after sorting the array of patients by name or id
-
-
-
-
-// TESTING QUEUE - to manage patients waiting for testing and update their status after testing
+//TESTING QUEUE - to manage patients waiting for testing and update their status after testing
 
 void processTestingQueue(TestingQueue & tq, LinkedList & list) // used & for reference so that we can update the original data in linked list after testing
 {
@@ -396,9 +392,9 @@ void patientSummary(LinkedList &list)
     }
 
     int active = 0;
-    int recovered = 0; 
+    int recovered = 0;
     int deceased = 0;
-    int critical = 0;
+    int critical = 0; 
     int untested = 0;
 
     // traversing the linked list to count the number of patients in each category
@@ -431,37 +427,203 @@ void patientSummary(LinkedList &list)
     cout << "-----------------------------------" << endl;
 }
 
-//MAIN FUNCTION AND MENU -
+//MAIN FUNCTION AND MENU 
 
 int main()
 {
     LinkedList patientList;
-    TestingQueue testingQ;
+    Patient arr[50];
+    int n = patientList.copyToArray(arr);
+    TestingQueue testQueue;
 
     int choice;
 
-    cout << "-----------------------------------------" << endl;
-    cout << "   VIRUS OUTBREAK MANAGEMENT SYSTEM" << endl;
-    cout << "------------------------------------------" << endl;
-//using do while loop to show menu until user wants to exit
-
-    do{
-        cout << "\n------- MENU -------" << endl;
-        cout << "1.  Register Patient" << endl;
-        cout << "2.  View All Patients" << endl;
-        cout << "3.  Add to Testing Queue" << endl;
-        cout << "4.  View Testing Queue" << endl;
-        cout << "5.  Process Next Test" << endl;
-        cout << "6.  Add Contact (Stack Push)" << endl;
-        cout << "7.  Remove Last Contact (Stack Pop)" << endl;
-        cout << "8.  View Contact Trace List" << endl;
-        cout << "9.  Sort by Severity" << endl;
-        cout << "10. Search Patient by ID" << endl;
-        cout << "11. Update Patient Status" << endl;
-        cout << "12. Remove Patient" << endl;
-        cout << "13. Patients Summary" << endl;
-        cout << "14. Exit" << endl;
-        cout << "Choice: ";
+    do
+    {
+        cout << "\n====== COVID PATIENT MANAGEMENT SYSTEM ======" << endl;
+        cout << "1. Add Patient" << endl;
+        cout << "2. Remove Patient" << endl;
+        cout << "3. Display All Patients" << endl;
+        cout << "4. Add Patient to Testing Queue" << endl;
+        cout << "5. Process Testing Queue" << endl;
+        cout << "6. Add Contact (Contact Tracing)" << endl;
+        cout << "7. Remove Last Contact" << endl;
+        cout << "8. Display Patient Contacts" << endl;
+        cout << "9. Patient Summary" << endl;
+        cout << "10. Bubble Sort" << endl;
+        cout << "0. Exit" << endl;
+        cout << "Enter choice: ";
         cin >> choice;
+
+        if (choice == 1)
+        {
+            Patient p;
+            cout << "Enter ID: ";
+            cin >> p.id;
+            cin.ignore();
+
+            cout << "Enter Name: ";
+            getline(cin, p.name);
+
+            cout << "Enter Age: ";
+            cin >> p.age;
+            cin.ignore();
+
+            cout << "Enter City: ";
+            getline(cin, p.location);
+
+            cout << "Enter Symptoms: ";
+            getline(cin, p.symptoms);
+
+            cout << "Enter Severity (1=Mild, 2=Moderate, 3=Severe, 4=Critical): ";
+            cin >> p.severity;
+
+            patientList.addPatient(p);
+        }
+
+        else if (choice == 2)
+        {
+            int id;
+            cout << "Enter Patient ID to remove: ";
+            cin >> id;
+            patientList.removePatient(id);
+        }
+
+        else if (choice == 3)
+        {
+            patientList.display();
+        }
+
+        else if (choice == 4)
+        {
+            int id;
+            cout << "Enter Patient ID for testing: ";
+            cin >> id;
+            if (patientList.findPatient(id))
+                testQueue.enqueue(id);
+            else
+                cout << "Patient not found." << endl;
+        }
+
+        else if (choice == 5)
+        {
+            processTestingQueue(testQueue, patientList);
+        }
+
+        else if (choice == 6)
+        {
+            int id;
+            string contact;
+            cout << "Enter Patient ID: ";
+            cin >> id;
+            cin.ignore();
+
+            Node* n = patientList.findPatient(id);
+            if (n)
+            {
+                cout << "Enter Contact Name: ";
+                getline(cin, contact);
+                pushContact(n->data, contact);
+            }
+            else
+                cout << "Patient not found." << endl;
+        }
+
+        else if (choice == 7)
+        {
+            int id;
+            cout << "Enter Patient ID: ";
+            cin >> id;
+
+            Node* n = patientList.findPatient(id);
+            if (n)
+                popContact(n->data);
+            else
+                cout << "Patient not found." << endl;
+        }
+
+        else if (choice == 8)
+        {
+            int id;
+            cout << "Enter Patient ID: ";
+            cin >> id;
+
+            Node* n = patientList.findPatient(id);
+            if (n)
+                displayContacts(n->data);
+            else
+                cout << "Patient not found." << endl;
+        }
+
+        else if (choice == 9)
+        {
+            patientSummary(patientList);
+        }
         
+        else if (choice == 10)
+        {
+            
+        Patient arr[50];
+        
+        // copy linked list into array
+        int n = patientList.copyToArray(arr);
+        
+        // sort by severity (high → low)
+        sortBySeverityDescending(arr, n);
+        
+        // print sorted result
+        cout << "\nPatients Sorted by Severity (High to Low):\n";
+        for (int i = 0; i < n; i++)
+        {
+            cout << "ID: " << arr[i].id
+                 << " Name: " << arr[i].name
+                 << " Severity: " << arr[i].severity
+                 << endl;
+        }
+
+        }
+        
+        else if (choice == 11)
+        {
+            
+        Patient arr[50];
+        int n = patientList.copyToArray(arr);
+        
+        int id;
+        cout << "Enter Patient ID to search: ";
+        cin >> id;
+        
+        int index = searchById(arr, n, id);
+        
+        if (index != -1)
+        {
+            cout << "\nPatient Found!\n";
+            cout << "ID: " << arr[index].id << endl;
+            cout << "Name: " << arr[index].name << endl;
+            cout << "Age: " << arr[index].age << endl;
+            cout << "Severity: " << arr[index].severity << endl;
+            cout << "Status: " << arr[index].status << endl;
+        }
+        else
+        {
+            cout << "Patient not found." << endl;
+        }
+
+        }
+
+        else if (choice == 0)
+        {
+            cout << "Exiting system. Stay safe!" << endl;
+        }
+
+        else
+        {
+            cout << "Invalid choice!" << endl;
+        }
+
+    } while (choice != 0);
+
+    return 0;
+
 }
+
