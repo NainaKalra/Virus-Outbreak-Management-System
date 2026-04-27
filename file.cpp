@@ -325,8 +325,20 @@ void linkedList (Node* head, size, array){
     return arr;
 }
 
- 
-//TESTING QUEUE - to manage patients waiting for testing and update their status after testing
+
+
+//bubble sort
+
+//binary search
+
+// showSortedPatients() - to display patients sorted by age or severity using bubble sort and binary search
+
+//searchPatient() - to search for a patient by name or id using binary search after sorting the array of patients by name or id
+
+
+
+
+// TESTING QUEUE - to manage patients waiting for testing and update their status after testing
 
 void processTestingQueue(TestingQueue & tq, LinkedList & list) // used & for reference so that we can update the original data in linked list after testing
 {
@@ -361,7 +373,7 @@ void processTestingQueue(TestingQueue & tq, LinkedList & list) // used & for ref
         node->data.isPositive = false;
     }
 //displaying result
-    if (node->data.isPositive = true)
+    if (node->data.isPositive == true)
     {
         cout << "Result: POSITIVE - Isolation required!" << endl;
     }
@@ -383,10 +395,10 @@ void patientSummary(LinkedList &list)
         return;
     }
 
-    int active = 0, 
-    int recovered = 0, 
+    int active = 0;
+    int recovered = 0; 
     int deceased = 0;
-    int critical = 0, 
+    int critical = 0;
     int untested = 0;
 
     // traversing the linked list to count the number of patients in each category
@@ -403,7 +415,7 @@ void patientSummary(LinkedList &list)
         if (temp->data.severity == 4)
             critical++;
         //for those who r not tested
-        if (!temp->data.tested)
+        if (temp->data.tested == false)
             untested++;
 
         temp = temp->next;
@@ -421,3 +433,35 @@ void patientSummary(LinkedList &list)
 
 //MAIN FUNCTION AND MENU -
 
+int main()
+{
+    LinkedList patientList;
+    TestingQueue testingQ;
+
+    int choice;
+
+    cout << "-----------------------------------------" << endl;
+    cout << "   VIRUS OUTBREAK MANAGEMENT SYSTEM" << endl;
+    cout << "------------------------------------------" << endl;
+//using do while loop to show menu until user wants to exit
+
+    do{
+        cout << "\n------- MENU -------" << endl;
+        cout << "1.  Register Patient" << endl;
+        cout << "2.  View All Patients" << endl;
+        cout << "3.  Add to Testing Queue" << endl;
+        cout << "4.  View Testing Queue" << endl;
+        cout << "5.  Process Next Test" << endl;
+        cout << "6.  Add Contact (Stack Push)" << endl;
+        cout << "7.  Remove Last Contact (Stack Pop)" << endl;
+        cout << "8.  View Contact Trace List" << endl;
+        cout << "9.  Sort by Severity" << endl;
+        cout << "10. Search Patient by ID" << endl;
+        cout << "11. Update Patient Status" << endl;
+        cout << "12. Remove Patient" << endl;
+        cout << "13. Patients Summary" << endl;
+        cout << "14. Exit" << endl;
+        cout << "Choice: ";
+        cin >> choice;
+        
+}
